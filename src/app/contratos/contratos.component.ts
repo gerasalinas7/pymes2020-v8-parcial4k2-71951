@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Contrato } from '../contrato';
 import { ContratosService } from '../contratos.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contratos',
@@ -20,10 +21,24 @@ export class ContratosComponent implements OnInit {
   submitted = false;
 
   Items: Contrato[] = [];
-  constructor(private contratosservice:  ContratosService) { }
+
+  FormReg: FormGroup;
+  constructor(private contratosservice:  ContratosService, public formBuilder: FormBuilder) { }
 
   ngOnInit() {
         this.GetContratos();
+
+        
+    this.FormReg = this.formBuilder.group({
+      IdContrato: [0],
+
+      ContratoDescripcion: [
+        "",
+        [Validators.required, Validators.minLength(4), Validators.maxLength(55)]
+      ],
+
+      ContratoImporte: [null, [Validators.required, Validators.pattern("[0-9]{1,7}")]]
+    });
   }
 
   GetContratos() {
@@ -32,4 +47,24 @@ export class ContratosComponent implements OnInit {
       this.Items = res;
     });
 }
+
+  Agregar() {
+    this.AccionABMC = "A";
+    //this.FormReg.reset(this.FormReg.value);
+    this.FormReg.reset();
+    //this.FormReg.controls['IdEmpresa'].setValue(0);
+
+    this.submitted = false;
+    //this.FormReg.markAsPristine();
+    this.FormReg.markAsUntouched();
+  }
+
+    Cancelar() {
+    this.AccionABMC = "L";
+    this.submitted = false;
+
+    this.GetContratos();
+  }
+
+
 }
