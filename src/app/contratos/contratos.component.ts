@@ -67,4 +67,34 @@ export class ContratosComponent implements OnInit {
   }
 
 
+   Grabar() {
+
+    this.submitted = true;
+
+    // verificar que los validadores esten OK
+     if (this.FormReg.invalid) {
+      //window.alert("Revisar Datos");
+      return;
+    }
+
+    //hacemos una copia de los datos del formulario, para modificar la fecha y luego enviarlo al servidor
+    const itemCopy = { ...this.FormReg.value };
+
+
+    // agregar post
+    if (itemCopy.IdContrato == 0 || itemCopy.IdContrato == null) {
+      itemCopy.IdContrato = 0;
+      console.log(itemCopy);
+      this.contratosservice.post(itemCopy).subscribe((res: any) => {
+
+        this.Cancelar();
+        //window.alert("Registro grabado");
+        // this.modalDialogService.Alert('Registro agregado correctamente.');
+        // this.Buscar();
+      });
+    } 
+
+    this.GetContratos();
+  }
+
 }
